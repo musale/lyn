@@ -7,6 +7,6 @@ var server = net.createServer(function(socket){
   const fmtDate = strf("%F %R", date);
   socket.write(strf(fmtDate));
   socket.end("\n");
-}).on("error", err => throw err);
+});
 
 server.listen(port);

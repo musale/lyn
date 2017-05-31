@@ -1,26 +1,12 @@
-const http = require("http");
-const bl = require("bl");
-let results = []
-let counter = 0
+const net = require("net");
+const strf = require("strftime");
+const port = process.argv[2];
 
+var server = net.createServer(function(socket){
+  let date = new Date();
+  const fmtDate = strf("%F %R", date);
+  socket.write(strf(fmtDate));
+  socket.end("\n");
+}).on("error", err => throw err);
 
-function consoleRes(){
-  for(let i = 0; i < 3; i++){
-    console.log(results[i]);
-  }
-}
-
-for (let i = 0; i < 3; i++) {
-  http.get(process.argv[2 + i], function(response){
-    response.pipe(bl(function (err, data){
-      if (err)
-        return console.error(err)
-      results[i] = data.toString();
-      counter++
-      if (counter == 3){
-        consoleRes();
-      }
-    }))
-  }).on("error", console.error);
-
-}
+server.listen(port);

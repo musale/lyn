@@ -1,14 +1,9 @@
-const fs = require("fs");
-
-fs.readdir(process.argv[2], callback)
-
-function callback(err, fileList){
-    if(err){console.log(err)}
-    else{
-	const ext = `.${process.argv[3]}`;
-    	var filtered = fileList.filter(f => f.endsWith(ext))
-	for(let i = 0; i < filtered.length; i++) {
-	    console.log(filtered[i]);
-	}
-    }
+const mymodule = require("./mymodule.js");
+const dirName = process.argv[2]
+const ext = process.argv[3]
+function callback (err, data){
+  if (err)
+    return console.error(err);
+  return data.forEach(file => console.log(file))
 }
+mymodule(dirName, ext, callback);

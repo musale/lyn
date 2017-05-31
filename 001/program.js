@@ -1,15 +1,26 @@
 const http = require("http");
 const bl = require("bl");
-url = process.argv[2]
+let results = []
+let counter = 0
 
-http.get(url, function(response) {
-  response.pipe(bl(function(err, data) {
-    if (err) {
-      return console.error(err);
-    } else {
-      data = data.toString()
-      console.log(data.length);
-      console.log(data);
-    }
-  }))
-}).on("error", console.error);
+
+function consoleRes(){
+  for(let i = 0; i < 3; i++){
+    console.log(results[i]);
+  }
+}
+
+for (let i = 0; i < 3; i++) {
+  http.get(process.argv[2 + i], function(response){
+    response.pipe(bl(function (err, data){
+      if (err)
+        return console.error(err)
+      results[i] = data.toString();
+      counter++
+      if (counter == 3){
+        consoleRes();
+      }
+    }))
+  }).on("error", console.error);
+
+}

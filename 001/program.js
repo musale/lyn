@@ -1,13 +1,29 @@
 const http = require("http");
-const map = require("through2-map");
-const port = process.argv[2];
+const url = require("url");
+const port = Number(process.argv[2]);
 
-var server = http.createServer((req, res) => {
-  if(req.method !== "POST")
-    return res.end("ONLY POST REQUESTS!")
-  req.pipe(
-    map(chunk => chunk.toString().toUpperCase())
-  ).pipe(res)
+const server = http.createServer((request, res) => {
+  const query = url.parse(request.url, true);
+  let date = new Date(query.query.iso);
+  console.log(query)
+
+  if (query.pathname == "/api/parsetime") {
+    res.setHeader("Content-Type", "application/json");
+    res.end(
+      JSON.stringify({
+        "hour": date.getHours(),
+        "minute": date.getMinutes(),
+        "second": date.getSeconds()
+      })
+    )
+  }
+   else if (query.pathname == "/api/unixtime") {
+    res.end(
+      JSON.stringify({
+        "unixtime": date.getTime()
+      })
+    )
+  }
 });
 
 server.listen(port);
